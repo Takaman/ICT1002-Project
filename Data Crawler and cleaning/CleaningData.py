@@ -4,9 +4,7 @@ import datetime as dt
 
 df = pd.concat(
     map(pd.read_csv,['OfficialReddit1.csv','covidsgtweets4.csv']))
-
 df['date']=pd.to_datetime(df.date)
-
 redditandtwitter = df.sort_values(by=['date'], ascending= False, ignore_index=True)
 redditandtwitter.to_csv('redditandtweets2')
 

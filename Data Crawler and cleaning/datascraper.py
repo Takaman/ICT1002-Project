@@ -189,7 +189,7 @@ window.title("Reddit and Twitter data scraper")
 menubar = Menu(window)
 window.config(menu=menubar)
 
-#tearoff 0 to stop random lines from appearing
+#tearoff 0 to stop random lines from appearing in the menu button
 filemenu = Menu(menubar,tearoff=0) 
 menubar.add_cascade(label="Type of Scraper",menu=filemenu)
 filemenu.add_command(label="Reddit Scraper",command=redditpage)
