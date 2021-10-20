@@ -26,10 +26,11 @@ They are positive.csv, negative.csv and neutral.csv.
 1) pip install requirements.txt
 2) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
 	- Interactive installer
-		- Run Python interpreter and run the following code:
+		- Run Python interpreter and the following code:
 		- This is to check NLTK has been installated successfully:
 			
 			``> import nltk``
+			
 			``> ntlk.download()``
 	
 		- (Extracted from nltk.org) A new window should open, showing the NLTK Downloader. 
@@ -44,6 +45,7 @@ They are positive.csv, negative.csv and neutral.csv.
 		(This assumes you downloaded the Brown Corpus): 
 			
 			``> from nltk.corpus import brown``
+			
 			``> brown.words()``
 
 			output: ['The', 'Fulton', 'County', 'Grand', 'Jury', 'said', ...]
