@@ -15,23 +15,26 @@ from twint.run import Search
 flag = True
 url = "https://www.reddit.com"
 
+#Function to return UTC number to readable Date format
 def get_date(created):
     return dt.datetime.fromtimestamp(created).date()
 
+#Function to format date selected to propert date format
 def return_utc(tkinterdate):
     date = str(tkinterdate)
     date = dt.datetime.strptime(date,"%Y-%m-%d").timetuple()
     date = int(time.mktime(date))
     return date
 
-def popoutimg(): #Success message popout function when scraping is completed
+#Success message popout function when scraping is completed
+def popoutimg(): 
     popup = Tk()
     popup.geometry('250x150')
     popup.wm_title("!")
     label = ttk.Label(popup, text="Congrats its done!")
     label.pack(side="top",fill="x",pady=30)
 
-
+#Reddit function to scrape data using PMAW libraries
 def reddit_scraper(topic, subreddit, limit, after, before, csvredditfilename, custom):
     api = PushshiftAPI()
     comments = api.search_comments(q=topic,subreddit=subreddit,limit= limit, after=after, before=before)
