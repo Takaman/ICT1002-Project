@@ -23,7 +23,7 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Steps neccessary to run code
 
-1) pip install requirements.txt
+1) Open CMD and run ``> pip install requirements.txt``
 2) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
 	- Interactive installer
 		- Run Python interpreter and the following code:
