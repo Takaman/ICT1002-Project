@@ -28,6 +28,7 @@ They are positive.csv, negative.csv and neutral.csv.
 	- Interactive installer
 		- Run Python interpreter and run the following code:
 		- This is to check NLTK has been installated successfully:
+			
 			``> import nltk``
 			``> ntlk.download()``
 	
@@ -41,6 +42,7 @@ They are positive.csv, negative.csv and neutral.csv.
 
 		- (Extracted from nltk.org) Test that the data has been installed as follows. 
 		(This assumes you downloaded the Brown Corpus): 
+			
 			``> from nltk.corpus import brown``
 			``> brown.words()``
 
