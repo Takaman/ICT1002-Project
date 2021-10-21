@@ -1,0 +1,10 @@
+twint
+pmaw
+pandas
+ftfy
+langdetect
+praw
+numpy
+re
+html
+datetime

@@ -12,22 +12,22 @@ from pmaw import PushshiftAPI
 from twint.run import Search
 
 
-flag = True
 url = "https://www.reddit.com"
 
 #Function to return UTC number to readable Date format
-def get_date(created):
+def getDate(created):
+    """Takes in a UTC number and returns a readable Date format"""
     return dt.datetime.fromtimestamp(created).date()
 
-#Function to format date selected to propert date format
-def return_utc(tkinterdate):
+#Function to format date selected to proper date format
+def returnUtc(tkinterdate):
     date = str(tkinterdate)
     date = dt.datetime.strptime(date,"%Y-%m-%d").timetuple()
     date = int(time.mktime(date))
     return date
 
 #Success message popout function when scraping is completed
-def popoutimg(): 
+def popoutImg(): 
     popup = Tk()
     popup.geometry('250x150')
     popup.wm_title("!")
@@ -35,30 +35,39 @@ def popoutimg():
     label.pack(side="top",fill="x",pady=30)
 
 #Reddit function to scrape data using PMAW libraries
-def reddit_scraper(topic, subreddit, limit, after, before, csvredditfilename, custom):
+#https://github.com/mattpodolak/pmaw 
+def redditScraper(topic, subreddit, limit, after, before, csvredditfilename, custom):
+    """This function takes in parameters and
+    uses PushshiftAPI to scrape through Reddit according
+    to the given parameters and limitations"""
+
     api = PushshiftAPI()
     comments = api.search_comments(q=topic,subreddit=subreddit,limit= limit, after=after, before=before)
-    print(f"Retrieved")
-    comments_df= pd.DataFrame(comments)
-    comments_df.drop(comments_df.columns.difference(custom),1,inplace=True)
+    commentsDf= pd.DataFrame(comments)
+    commentsDf.drop(commentsDf.columns.difference(custom),1,inplace=True)
     
-    _timestamp = comments_df["created_utc"].apply(get_date)
-    comments_df = comments_df.assign(created_utc = _timestamp)
-    comments_df = comments_df.assign(permalink= url + comments_df["permalink"]) 
+    if "created_utc" in commentsDf.columns: #Checking whether this is created
+        timeStamp = commentsDf["created_utc"].apply(getDate)
+        commentsDf = commentsDf.assign(created_utc = timeStamp)
+    if "permalink" in commentsDf.columns:
+        commentsDf = commentsDf.assign(permalink= url + commentsDf["permalink"]) 
+        commentsDf = commentsDf.sort_values('created_utc', ignore_index= True) #Sort the entire sheet by datetime and then index accordingly
 
-    comments_df.body = comments_df.body.apply(html.unescape)
-    comments_df.body = comments_df.body.apply(lambda x: re.split('https:\/\/.*', str(x))[0])
-
-    nan_value = float("NaN")
-    comments_df.replace("",nan_value, inplace=True)
-    comments_df.dropna(subset=["body"],inplace=True)
-
-    final_df = comments_df.sort_values('created_utc', ignore_index= True) #Sort the entire sheet by datetime and then index accordingly
-    final_df.to_csv(csvredditfilename)
-    popoutimg()
+    commentsDf.body = commentsDf.body.apply(html.unescape) #Removing HTML encoding such as &gt &amp
+    commentsDf.body = commentsDf.body.apply(lambda x: re.split('https:\/\/.*', str(x))[0]) #Remove Links
+    nanValue = float("NaN")
+    commentsDf.replace("",nanValue, inplace=True)
+    commentsDf.dropna(subset=["body"],inplace=True) #Dropping NaN value for those links found
     
-
-def twint_scraper(topic, links ,since, until, limit, custom, output):
+    
+    commentsDf.to_csv(csvredditfilename)
+    popoutImg()
+    
+#Twitter scraping function 
+#https://github.com/twintproject/twint 
+def twintScraper(topic, links ,since, until, limit, custom, output):
+    """Takes in parameters and then set accordingly 
+    to the twint configurations and run it"""
     c = twint.Config()
     c.Search = topic
     c.Since = since
@@ -71,28 +80,29 @@ def twint_scraper(topic, links ,since, until, limit, custom, output):
     c.Custom["tweet"] = custom
     c.Output = output
     twint.run.Search(c)
-    popoutimg()
+    popoutImg()
 
-def twitterpage():
-    def twitterclick():
-        twitter_topic = twitterentry.get()
-        if variablelink.get() == "Yes":
+#Tkinter GUI page for twitter menu
+def twitterPage(): 
+    def twitterClick():
+        twitterTopic = twitterEntry.get()
+        if variableLink.get() == "Yes":
             links = "exclude"
         else:
             links = "include"
         limit = limits.get()
         custom = []
-        columnname = optionList.curselection()
-        for i in columnname:
+        columnName = optionList.curselection()
+        for i in columnName:
             custom.append(optionList.get(i))
         
-        afterdate = str(calafter.get_date())
-        beforedate = str(calbefore.get_date())
-        filename = csvname.get()
-        twint_scraper(twitter_topic, links, afterdate, beforedate,limit, custom,filename) 
+        afterDate = str(calAfter.get_date())
+        beforeDate = str(calBefore.get_date())
+        fileName = csvName.get()
+        twintScraper(twitterTopic, links, afterDate, beforeDate,limit, custom,fileName) 
     
     
-    for labels in list(window.children.values()):
+    for labels in list(window.children.values()): #This ensures no other menus are overlapping current one
         label = str(labels)
         if label != '.!menu' and label != '.!label':
             labels.destroy()
@@ -105,10 +115,10 @@ def twitterpage():
     Label(window,text="To which date?").grid(row=11,column=0,sticky=W)
     Label(window,text="Enter your CSV filename").grid(row=13,column=0,sticky=W)
 
-    twitterentry = Entry(window,width=20,bg="white")
-    twitterentry.grid(row=2,column=0,sticky=W)
-    variablelink = StringVar(window, "Yes")
-    links = OptionMenu(window, variablelink, "Yes","No")
+    twitterEntry = Entry(window,width=20,bg="white")
+    twitterEntry.grid(row=2,column=0,sticky=W)
+    variableLink = StringVar(window, "Yes")
+    links = OptionMenu(window, variableLink, "Yes","No")
     links.grid(row=4,column=0,sticky=W)
     limits = Entry(window, width=20,bg="white") 
     limits.grid(row=6, column=0, sticky=W)
@@ -120,30 +130,36 @@ def twitterpage():
         optionList.insert(END,choices[column])
         optionList.itemconfig(column,bg="red")
     
-    calafter= DateEntry(window,width=20, selectmode="day")
-    calafter.grid(row=10,column=0,sticky=W)
-    calbefore = DateEntry(window, width=20, selectmode="day")
-    calbefore.grid(row=12,column=0,sticky=W)
-    csvname = Entry(window, width=20, bg="white")
-    csvname.grid(row=14,column=0, sticky=W)
+    calAfter= DateEntry(window,width=20, selectmode="day")
+    calAfter.grid(row=10,column=0,sticky=W)
+    calBefore = DateEntry(window, width=20, selectmode="day")
+    calBefore.grid(row=12,column=0,sticky=W)
+    csvName = Entry(window, width=20, bg="white")
+    csvName.grid(row=14,column=0, sticky=W)
     
-    button = Button(window, text="SUBMIT",width=6, command=twitterclick).grid(row=15,column=0,sticky=W)
-    Button(window, text="Refresh", width=6, command=twitterpage).grid(row=15,column=1, sticky=E)
+    button = Button(window, text="SUBMIT",width=6, command=twitterClick).grid(row=15,column=0,sticky=W)
+    Button(window, text="Refresh", width=6, command=twitterPage).grid(row=15,column=1, sticky=E)
 
-def redditpage():
-    def redditclick():
-        reddit_topic = textentry.get()
-        subreddit = subredditentry.get()
-        limit = int(commentlimit.get())
-        afterdate = return_utc(str(calafter.get_date()))
-        beforedate = return_utc(str(calbefore.get_date()))
-        filename = csvname.get()
+#Tkinter GUI page for Reddit menu
+def redditPage():
+    """
+    Contains two functions
+    redditPage() = GUI menu page for reddit parameters. 
+    redditClick() = Onsubmit, wrap parameters and inserts/send the value to redditScraper"""
+
+    def redditClick():
+        
+        redditTopic = textEntry.get()
+        subreddit = subredditEntry.get()
+        limit = int(commentLimit.get())
+        afterDate = returnUtc(str(calAfter.get_date()))
+        beforeDate = returnUtc(str(calBefore.get_date()))
+        fileName = csvName.get()
         custom = []
-        columnname = optionList.curselection()
-        for i in columnname:
+        columnName = optionList.curselection() #Gets all of the list selection in Tkinter
+        for i in columnName:
             custom.append(optionList.get(i))       
-
-        reddit_scraper(reddit_topic,subreddit,limit,afterdate,beforedate,filename,custom)
+        redditScraper(redditTopic,subreddit,limit,afterDate,beforeDate,fileName,custom)
     
     
     for labels in list(window.children.values()):
@@ -151,7 +167,7 @@ def redditpage():
         if label != '.!menu' and label != '.!label':
             labels.destroy()
 
-    #Create label
+    #Create label (Text)
     Label (window, text="Enter your reddit topic:").grid(row=1, column=0,sticky=W)
     Label (window, text="Enter the subreddit you want to search(Optional):").grid(row=3, column=0,sticky=W)
     Label (window, text="Enter the limit of your comments(Needed):").grid(row=5, column=0,sticky=W)
@@ -160,52 +176,43 @@ def redditpage():
     Label (window, text="To which date?" ).grid(row=11,column=0,sticky=W)
     Label (window, text="Enter your CSV filename").grid(row=13,column=0,sticky=W)
     
-    #create a text entry box()
-    textentry = Entry(window, width=20, bg = "white")
-    textentry.grid(row=2,column=0, sticky=W)
-    subredditentry = Entry(window, width=20, bg= "white")
-    subredditentry.grid(row=4, column=0, sticky=W)
-    commentlimit = Entry(window,width=20, bg= "white" )
-    commentlimit.grid(row=6,column=0,sticky=W)
+    #create a entry boxes()
+    textEntry = Entry(window, width=20, bg = "white")
+    textEntry.grid(row=2,column=0, sticky=W)
+    subredditEntry = Entry(window, width=20, bg= "white")
+    subredditEntry.grid(row=4, column=0, sticky=W)
+    commentLimit = Entry(window,width=20, bg= "white" )
+    commentLimit.grid(row=6,column=0,sticky=W)
     choices = ["id","author","all_awardings","body","created_utc","permalink","score","subreddit"]
     optionList = Listbox(window, selectmode="multiple")
     optionList.grid(row=8,column=0, sticky=W)
     for column in range(len(choices)):
         optionList.insert(END,choices[column])
         optionList.itemconfig(column,bg="red")
-    calafter = DateEntry(window, width =20, selectmode="day")
-    calafter.grid(row=10,column=0,sticky=W)
-    calbefore = DateEntry(window, width=20, selectmode="day")
-    calbefore.grid(row=12,column=0,sticky=W)
-    csvname = Entry(window, width=40, bg="white")
-    csvname.grid(row=14, column=0 , sticky=W)
+    calAfter = DateEntry(window, width =20, selectmode="day")
+    calAfter.grid(row=10,column=0,sticky=W)
+    calBefore = DateEntry(window, width=20, selectmode="day")
+    calBefore.grid(row=12,column=0,sticky=W)
+    csvName = Entry(window, width=40, bg="white")
+    csvName.grid(row=14, column=0 , sticky=W)
     #adding a submit and refresh button
-    button = Button(window, text="SUBMIT",width=6, command=redditclick).grid(row=15,column=0,sticky=W)
-    Button(window, text="Refresh", width=6, command=redditpage).grid(row=15,column=1, sticky=E)
+    button = Button(window, text="SUBMIT",width=6, command=redditClick).grid(row=15,column=0,sticky=W)
+    Button(window, text="Refresh", width=6, command=redditPage).grid(row=15,column=1, sticky=E)
 
-
-
-#Main GUI 
+#Main GUI layout
 window = Tk()
 window.title("Reddit and Twitter data scraper")
-
-menubar = Menu(window)
-window.config(menu=menubar)
-
-#tearoff 0 to stop random lines from appearing in the menu button
-filemenu = Menu(menubar,tearoff=0) 
-menubar.add_cascade(label="Type of Scraper",menu=filemenu)
-filemenu.add_command(label="Reddit Scraper",command=redditpage)
-filemenu.add_command(label="Twitter Scraper",command=twitterpage)
-
-
-# #My photo
-photo1 = PhotoImage(file="Screenshot_3.png")
+menuBar = Menu(window)
+window.config(menu=menuBar)
+fileMenu = Menu(menuBar,tearoff=0) #tearoff 0 to stop random lines from appearing in the menu button
+menuBar.add_cascade(label="Type of Scraper",menu=fileMenu)
+fileMenu.add_command(label="Reddit Scraper",command=redditPage)
+fileMenu.add_command(label="Twitter Scraper",command=twitterPage)
+photo1 = PhotoImage(file="Screenshot_3.png")# #My photo
 Label (window, image= photo1, bg="white").grid(row=0, columnspan=2,sticky=E)
+# frame = Frame(window)
 
-#Create label
-frame = Frame(window)
-
-redditpage()
-#Main loop
-window.mainloop()
+if __name__ == "__main__":
+    redditPage()  #GUI main page   
+    #Tkinter GUI to open
+    window.mainloop()
