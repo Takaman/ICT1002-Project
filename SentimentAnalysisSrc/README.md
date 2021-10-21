@@ -9,8 +9,11 @@ to +1, -1 being very negative and +1 being very positive.
 The threshold set are as follows:
 
 Positive sentiment	: compound score >= 0.05 
+
 Negative sentiment	: compound score <= -0.05
+
 Neutral sentiment	: compound score > -0.05 and compound score < 0.05 
+
 
 However, if a sentence exceeds a certain character limit (280), it is then broken up into sentences, and scores
 are aggregated at the sentence level for the whole post. This is to allow for better accuracy of evaluating
