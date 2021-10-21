@@ -9,5 +9,6 @@ This project consists of 3 main tasks.
 2) Sentiment analysis
 3) Data visualisation, topic modelling and plotting
 
-###How to use?
+##How to use?
 Read the README.md for each of the 3 task.
+Each task is loosely coupled from each other and . However, output files are required. (E.g Task 1's output file for Task 2 and Task 2 output file for Task 3)
