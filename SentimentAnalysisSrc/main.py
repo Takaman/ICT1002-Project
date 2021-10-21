@@ -194,7 +194,7 @@ def analyseData(df: pd.DataFrame) -> tuple:
     return posDF, negDF, neuDF
 
 
-def createOutputCSVFile(df: pd.DataFrame, fileName: str, index: object = 1) -> None:
+def createOutputCSVFile(df: pd.DataFrame, fileName: str, index: int = 1) -> None:
     """
     Creates an output CSV file based on the DataFrame input using the pandas to_csv function.
     If there is an existing file that has the same name, it creates another file with a modified name instead.
