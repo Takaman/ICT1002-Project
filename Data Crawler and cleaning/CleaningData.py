@@ -6,10 +6,10 @@ from langdetect import detect
 
 #Concatenation of both reddit and twitter files(with same column names and file names provided in CSV)
 df = pd.concat(
-    map(pd.read_csv,['OfficialReddit1.csv','covidsgtweets4.csv']))
+    map(pd.read_csv,['Redditdata.csv','covidsgtweets4.csv']))
 df['date']=pd.to_datetime(df.date)
 redditandtwitter = df.sort_values(by=['date'], ascending= False, ignore_index=True)
-redditandtwitter.to_csv('redditandtweets2')
+redditandtwitter.to_csv('redditandtweets2.csv')
 
 
 #Reading each tweet/comment and fixing unicode errors FTFY and Detect
