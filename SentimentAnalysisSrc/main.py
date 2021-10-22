@@ -247,6 +247,11 @@ def main():
 
     # Sample hardcoded test data
     # filePath = "redditandtweetsv3.csv"
+    
+    # Validate user argument length
+    if len(sys.argv) != 2:
+        print("Usage: py main.py dataFile.csv")
+        sys.exit(1)
 
     filePath = sys.argv[1]
     df = loadData(filePath)
