@@ -27,4 +27,5 @@ for x in commentsDf["body"]:
 nanValue = float("NaN")
 commentsDf.replace("",nanValue, inplace=True)
 commentsDf.dropna(subset=["body"],inplace=True)
+commentsDf.reset_index(drop=True, inplace=True)
 commentsDf.to_csv("redditandtweetsv3")
