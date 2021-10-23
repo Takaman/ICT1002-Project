@@ -15,12 +15,7 @@ Negative sentiment	: compound score <= -0.05
 Neutral sentiment	: compound score > -0.05 and compound score < 0.05 
 
 
-However, if a sentence exceeds a certain character limit (280), it is then broken up into sentences, and scores
-are aggregated at the sentence level for the whole post. This is to allow for better accuracy of evaluating
-the sentiment as the sentiment analysis performs better in shorter texts. But because the score is aggregated,
-the maximum and minimum scores will differ from the max and min score of +1 and -1 respectively.
-
-After data is analyzed, 3 output files are generated that contains their respective sentiments.
+After the data is analyzed, 3 output files are generated that contains their respective sentiments.
 
 They are positive.csv, negative.csv and neutral.csv.
 
@@ -28,6 +23,10 @@ They are positive.csv, negative.csv and neutral.csv.
 
 1) Run CMD and the following: ``> pip install -r requirements.txt``
 2) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
+
+	- Command Line installation
+		- Run cmd and type into it the following: python -m nltk.downloader all
+
 	- Interactive installer
 		- Run Python interpreter and the following code:
 		- This is to check NLTK has been installated successfully:
@@ -53,17 +52,14 @@ They are positive.csv, negative.csv and neutral.csv.
 
 			output: ['The', 'Fulton', 'County', 'Grand', 'Jury', 'said', ...]
 
-	- Command Line installation
-		- Run cmd and type into it the following: python -m nltk.downloader all
-
 	- For further information, please check https://www.nltk.org/data.html 
 
 ### Steps neccessary to run code
 
 1) Change directory to where your SentimentAnalysisSrc folder is.
-2) Run Python interpreter and the following code:
+2) Run the following code in the terminal:
 
-``> main.py dataFile.csv``
+``py main.py dataFile.csv``
 
 
 3) Give the script time to run. It takes an average of 60 - 70 seconds for a sameple data of 70K rows.
