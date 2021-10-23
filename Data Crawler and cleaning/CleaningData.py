@@ -21,6 +21,7 @@ for x in commentsDf["body"]:
         if detect(x) != 'en':
             commentsDf["body"] = commentsDf["body"].replace(x,"")
     except: #Catches the error in case that it cannot detect a suitable language
+        
         commentsDf["body"] = commentsDf["body"].replace(x,"")
         commentsDf["body"].replace("\\b[0-9]+\\b","")
         

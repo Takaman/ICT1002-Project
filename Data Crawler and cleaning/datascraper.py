@@ -53,11 +53,12 @@ def redditScraper(topic, subreddit, limit, after, before, csvredditfilename, cus
         commentsDf = commentsDf.assign(permalink= url + commentsDf["permalink"]) 
         commentsDf = commentsDf.sort_values('created_utc', ignore_index= True) #Sort the entire sheet by datetime and then index accordingly
 
-    commentsDf.body = commentsDf.body.apply(html.unescape) #Removing HTML encoding such as &gt &amp
-    commentsDf.body = commentsDf.body.apply(lambda x: re.split('https:\/\/.*', str(x))[0]) #Remove Links
-    nanValue = float("NaN")
-    commentsDf.replace("",nanValue, inplace=True)
-    commentsDf.dropna(subset=["body"],inplace=True) #Dropping NaN value for those links found
+    if "body" in commentsDf.columns:
+        commentsDf.body = commentsDf.body.apply(html.unescape) #Removing HTML encoding such as &gt &amp
+        commentsDf.body = commentsDf.body.apply(lambda x: re.split('https:\/\/.*', str(x))[0]) #Remove Links
+        nanValue = float("NaN")
+        commentsDf.replace("",nanValue, inplace=True)
+        commentsDf.dropna(subset=["body"],inplace=True) #Dropping NaN value for those links found
     
     
     commentsDf.to_csv(csvredditfilename)
@@ -213,6 +214,7 @@ Label (window, image= photo1, bg="white").grid(row=0, columnspan=2,sticky=E)
 # frame = Frame(window)
 
 if __name__ == "__main__":
-    redditPage()  #GUI main page   
+ #GUI main page   
     #Tkinter GUI to open
+    redditPage()
     window.mainloop()
