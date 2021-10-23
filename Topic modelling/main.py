@@ -34,15 +34,15 @@ visoutput = output HTML for topic visualization using pyLDAvis
 '''
 if num == 1:
     csv = 'negative.csv'
-    wordlimit = 18000
+    wordlimit = 15000
     visoutput = 'Negative_LDA_Visualization.html'
 elif num == 2:
     csv = 'neutral.csv'
-    wordlimit = 6500
+    wordlimit = 1100
     visoutput = 'Neutral_LDA_Visualization.html'
 elif num == 3:
     csv = 'positive.csv'
-    wordlimit = 25000
+    wordlimit = 15000
     visoutput = 'Positive_LDA_Visualization.html'
 else:
     print('Invalid input! Please enter a valid argument: ')
@@ -80,7 +80,7 @@ from spacy_langdetect import LanguageDetector
 
 # Stopwords to remove 'useless' words
 sWords = stopwords.words('english')
-sWords.extend(['got', 'say', 'use', 'from', 'gon', 'na', 'wa', 'nt', 'gt', 'to', 'also', 'that', 'this', 'the'])
+sWords.extend(['got', 'say', 'use', 'from', 'said', 'th', 'gon', 'na', 'wa', 'nt', 'gt', 'to', 'also', 'that', 'this', 'the'])
 setStopWords = set(sWords)
 puncExclude = set(string.punctuation)
 engWords = set(nltk.corpus.words.words())
@@ -139,9 +139,14 @@ def clean(doc):
     for sent in data1.sents:
         if (sent._.language)['language'] == 'en':
             finalData += str(sent)
+    
+    # Remove Trailing and Preceding Whitespaces
     finalData = finalData.strip()
 
-    return finalData.lower()
+    # Remove the word 'covid' since we want to grasp topics talking about Covid-19.
+    finalData = finalData.lower()
+    finalData = finalData.replace('covid','')
+    return finalData
 
 # Data cleaning completed.
 cleanData = [clean(doc).split() for doc in data]
