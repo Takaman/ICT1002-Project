@@ -15,7 +15,7 @@ Negative sentiment	: compound score <= -0.05
 Neutral sentiment	: compound score > -0.05 and compound score < 0.05 
 
 
-After data is analyzed, 3 output files are generated that contains their respective sentiments.
+After the data is analyzed, 3 output files are generated that contains their respective sentiments.
 
 They are positive.csv, negative.csv and neutral.csv.
 
