@@ -34,14 +34,25 @@ def popoutImg():
     label = ttk.Label(popup, text="Congrats its done!")
     label.pack(side="top",fill="x",pady=30)
 
+def popoutError():
+    popup = Tk()
+    popup.geometry('250x150')
+    popup.wm_title("!")
+    label = ttk.Label(popup, text="Please fill in properly!")
+    label.pack(side="top",fill="x",pady=30)
+
 #Reddit function to scrape data using PMAW libraries
 #https://github.com/mattpodolak/pmaw 
 def redditScraper(topic, subreddit, limit, after, before, csvredditfilename, custom):
     """This function takes in parameters and
     uses PushshiftAPI to scrape through Reddit according
     to the given parameters and limitations"""
-
+    limit = int(limit)
     api = PushshiftAPI()
+    
+    defaultValues = "body","created_utc","permalink"
+    custom.extend(["body","created_utc","permalink"])
+    print(custom)
     comments = api.search_comments(q=topic,subreddit=subreddit,limit= limit, after=after, before=before)
     commentsDf= pd.DataFrame(comments)
     commentsDf.drop(commentsDf.columns.difference(custom),1,inplace=True)
@@ -60,6 +71,7 @@ def redditScraper(topic, subreddit, limit, after, before, csvredditfilename, cus
         commentsDf.replace("",nanValue, inplace=True)
         commentsDf.dropna(subset=["body"],inplace=True) #Dropping NaN value for those links found
     
+    commentsDf.rename(columns={"created_utc":"date","permalink":"link"},inplace=True)
     
     commentsDf.to_csv(csvredditfilename)
     popoutImg()
@@ -69,6 +81,7 @@ def redditScraper(topic, subreddit, limit, after, before, csvredditfilename, cus
 def twintScraper(topic, links ,since, until, limit, custom, output):
     """Takes in parameters and then set accordingly 
     to the twint configurations and run it"""
+    custom.extend(["date","tweet","link"])
     c = twint.Config()
     c.Search = topic
     c.Since = since
@@ -100,7 +113,10 @@ def twitterPage():
         afterDate = str(calAfter.get_date())
         beforeDate = str(calBefore.get_date())
         fileName = csvName.get()
-        twintScraper(twitterTopic, links, afterDate, beforeDate,limit, custom,fileName) 
+        if twitterTopic and limit and fileName:
+            twintScraper(twitterTopic, links, afterDate, beforeDate,limit, custom,fileName) 
+        else:
+            popoutError()
     
     
     for labels in list(window.children.values()): #This ensures no other menus are overlapping current one
@@ -108,10 +124,12 @@ def twitterPage():
         if label != '.!menu' and label != '.!label':
             labels.destroy()
 
-    Label(window, text="Enter your twitter topic").grid(row=1,column=0,sticky=W)
+    digitvalidation = window.register(only_number)
+
+    Label(window, text="Enter your twitter search keyword").grid(row=1,column=0,sticky=W)
     Label(window, text="Do you want to exclude links contained in tweets?").grid(row=3,column=0,sticky=W)
     Label(window, text="Enter the limit of your tweets(numbers)").grid(row=5,column=0,sticky=W)
-    Label(window, text="Choose all columns you want to be included:").grid(row=7,column=0,sticky=W)
+    Label(window, text="Choose all columns you want to be included: (Default= Date,Tweet, Link").grid(row=7,column=0,sticky=W)
     Label(window, text="From which date?" ).grid(row=9,column=0,sticky=W)
     Label(window,text="To which date?").grid(row=11,column=0,sticky=W)
     Label(window,text="Enter your CSV filename").grid(row=13,column=0,sticky=W)
@@ -123,8 +141,8 @@ def twitterPage():
     links.grid(row=4,column=0,sticky=W)
     limits = Entry(window, width=20,bg="white") 
     limits.grid(row=6, column=0, sticky=W)
-
-    choices = ["id","username","date","time","tweet","link","likes_count","replies_count","retweets_count"]
+    limits.config(validate="key", validatecommand=(digitvalidation,'%S'))
+    choices = ["id","username","time","likes_count","replies_count","retweets_count"]
     optionList = Listbox(window, selectmode="multiple")
     optionList.grid(row=8,column=0, sticky=W)
     for column in range(len(choices)):
@@ -139,7 +157,11 @@ def twitterPage():
     csvName.grid(row=14,column=0, sticky=W)
     
     button = Button(window, text="SUBMIT",width=6, command=twitterClick).grid(row=15,column=0,sticky=W)
-    Button(window, text="Refresh", width=6, command=twitterPage).grid(row=15,column=1, sticky=E)
+    Button(window, text="Refresh", width=6, command=twitterPage).grid(row=15,column=1, sticky=W)
+
+def only_number(digit):
+    return digit.isdigit()
+
 
 #Tkinter GUI page for Reddit menu
 def redditPage():
@@ -149,18 +171,22 @@ def redditPage():
     redditClick() = Onsubmit, wrap parameters and inserts/send the value to redditScraper"""
 
     def redditClick():
-        
+
         redditTopic = textEntry.get()
         subreddit = subredditEntry.get()
-        limit = int(commentLimit.get())
+        limit = commentLimit.get()
         afterDate = returnUtc(str(calAfter.get_date()))
         beforeDate = returnUtc(str(calBefore.get_date()))
         fileName = csvName.get()
         custom = []
         columnName = optionList.curselection() #Gets all of the list selection in Tkinter
         for i in columnName:
-            custom.append(optionList.get(i))       
-        redditScraper(redditTopic,subreddit,limit,afterDate,beforeDate,fileName,custom)
+            custom.append(optionList.get(i))
+            
+        if redditTopic and limit and fileName:           
+            redditScraper(redditTopic,subreddit,limit,afterDate,beforeDate,fileName,custom)
+        else:
+            popoutError()
     
     
     for labels in list(window.children.values()):
@@ -168,11 +194,12 @@ def redditPage():
         if label != '.!menu' and label != '.!label':
             labels.destroy()
 
+    digitvalidation = window.register(only_number)
     #Create label (Text)
     Label (window, text="Enter your reddit topic:").grid(row=1, column=0,sticky=W)
     Label (window, text="Enter the subreddit you want to search(Optional):").grid(row=3, column=0,sticky=W)
     Label (window, text="Enter the limit of your comments(Needed):").grid(row=5, column=0,sticky=W)
-    Label(window, text="Choose all columns you want to be included:").grid(row=7,column=0,sticky=W)
+    Label(window, text="Choose all columns you want to be included: (Default: body, date, link)").grid(row=7,column=0,sticky=W)
     Label (window, text="From which date?").grid(row=9,column=0,sticky=W)
     Label (window, text="To which date?" ).grid(row=11,column=0,sticky=W)
     Label (window, text="Enter your CSV filename").grid(row=13,column=0,sticky=W)
@@ -184,7 +211,8 @@ def redditPage():
     subredditEntry.grid(row=4, column=0, sticky=W)
     commentLimit = Entry(window,width=20, bg= "white" )
     commentLimit.grid(row=6,column=0,sticky=W)
-    choices = ["id","author","all_awardings","body","created_utc","permalink","score","subreddit"]
+    commentLimit.config(validate="key", validatecommand=(digitvalidation,'%S'))
+    choices = ["id","author","all_awardings","is_submitter","author_premium","score","subreddit","subreddit_id"]
     optionList = Listbox(window, selectmode="multiple")
     optionList.grid(row=8,column=0, sticky=W)
     for column in range(len(choices)):
@@ -211,7 +239,6 @@ fileMenu.add_command(label="Reddit Scraper",command=redditPage)
 fileMenu.add_command(label="Twitter Scraper",command=twitterPage)
 photo1 = PhotoImage(file="Screenshot_3.png")# #My photo
 Label (window, image= photo1, bg="white").grid(row=0, columnspan=2,sticky=E)
-# frame = Frame(window)
 
 if __name__ == "__main__":
  #GUI main page   
