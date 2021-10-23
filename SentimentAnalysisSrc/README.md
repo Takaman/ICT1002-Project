@@ -15,11 +15,6 @@ Negative sentiment	: compound score <= -0.05
 Neutral sentiment	: compound score > -0.05 and compound score < 0.05 
 
 
-However, if a sentence exceeds a certain character limit (280), it is then broken up into sentences, and scores
-are aggregated at the sentence level for the whole post. This is to allow for better accuracy of evaluating
-the sentiment as the sentiment analysis performs better in shorter texts. But because the score is aggregated,
-the maximum and minimum scores will differ from the max and min score of +1 and -1 respectively.
-
 After data is analyzed, 3 output files are generated that contains their respective sentiments.
 
 They are positive.csv, negative.csv and neutral.csv.
