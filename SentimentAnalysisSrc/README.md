@@ -26,7 +26,7 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Neccessary library installations 
 
-1) Run CMD and the following: ``> pip install requirements.txt``
+1) Run CMD and the following: ``> pip install -r requirements.txt``
 2) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
 	- Interactive installer
 		- Run Python interpreter and the following code:
@@ -34,7 +34,7 @@ They are positive.csv, negative.csv and neutral.csv.
 			
 			``> import nltk``
 			
-			``> ntlk.download()``
+			``> nltk.download()``
 	
 		- (Extracted from nltk.org) A new window should open, showing the NLTK Downloader. 
 		Click on the File menu and select Change Download Directory. 
