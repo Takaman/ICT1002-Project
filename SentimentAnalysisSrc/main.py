@@ -5,6 +5,7 @@ import pandas as pd
 import sys
 import re
 import time
+import decimal
 
 
 # Algorithm provided by: Kamil Slowikowski (2018) remove-emoji.py version 1 [source code]
@@ -159,6 +160,9 @@ def analyseData(df: pd.DataFrame) -> tuple:
             # Aggregate sentiment score at the sentence level
             for sentence in listOfSentences:
                 score += analyzer.polarity_scores(sentence)["compound"]
+                
+            # Get the average score for the tallied sentiment score
+            score = decimal.Decimal(score) / decimal.Decimal(len(listOfSentences))
 
         else:
 
@@ -242,6 +246,9 @@ def main():
     """
     Loads data, analyses data, and generates 3 csv files for positive, negative and neutral sentiment in folder.
     """
+    
+    # Set decimal precision
+    decimal.getcontext().prec = 4
 
     startTime = time.perf_counter()
 
