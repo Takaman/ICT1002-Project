@@ -22,7 +22,11 @@ except (ValueError, TypeError, NameError, IndexError):
     print('main.py <1, 2 or 3> | 1 = negative.csv, 2 = neutral.csv, 3. positive.csv')
     sys.exit()
 
-# Test
+if len(sys.argv) > 2:
+    print('Invalid input! Please enter a valid argument')
+    print('main.py <1, 2 or 3> | 1 = negative.csv, 2 = neutral.csv, 3. positive.csv')
+    sys.exit()
+
 ''' 
 csv = CSV file to read
 wordlimit = word limit for word count graph
@@ -30,15 +34,15 @@ visoutput = output HTML for topic visualization using pyLDAvis
 '''
 if num == 1:
     csv = 'negative.csv'
-    wordlimit = 14000
+    wordlimit = 18000
     visoutput = 'Negative_LDA_Visualization.html'
 elif num == 2:
     csv = 'neutral.csv'
-    wordlimit = 3500
+    wordlimit = 6500
     visoutput = 'Neutral_LDA_Visualization.html'
 elif num == 3:
     csv = 'positive.csv'
-    wordlimit = 20000
+    wordlimit = 25000
     visoutput = 'Positive_LDA_Visualization.html'
 else:
     print('Invalid input! Please enter a valid argument: ')
@@ -137,8 +141,7 @@ def clean(doc):
             finalData += str(sent)
     finalData = finalData.strip()
 
-    return finalData
-
+    return finalData.lower()
 
 # Data cleaning completed.
 cleanData = [clean(doc).split() for doc in data]

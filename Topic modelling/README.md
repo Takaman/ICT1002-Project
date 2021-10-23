@@ -2,8 +2,16 @@
 
 Task 3: Analyze the topics within each emotion categorizes using topic modeling or detection. 
 
-How to Run:
+Pre-Requisites:
+1. Go to https://visualstudio.microsoft.com/visual-cpp-build-tools/
+2. Download the Build Tools
+3. Install the build tools with the following components: Windows 10 SDK AND C++/CLI support
+4. pip3 install -r requirements.txt
+5. Run in python interpreter:
+> import nltk\
+> nltk.download()
 
+How to Run:
 1. Open CMD
 2. Navigate to folder containing main.py
 3. Type in CMD: main.py <1, 2 or 3> **(IMPORTANT)**
