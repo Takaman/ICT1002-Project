@@ -241,7 +241,7 @@ photo1 = PhotoImage(file="Screenshot_3.png")# #My photo
 Label (window, image= photo1, bg="white").grid(row=0, columnspan=2,sticky=E)
 
 if __name__ == "__main__":
- #GUI main page   
+    #GUI main page   
     #Tkinter GUI to open
     redditPage()
     window.mainloop()
