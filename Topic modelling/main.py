@@ -34,7 +34,7 @@ visoutput = output HTML for topic visualization using pyLDAvis
 '''
 if num == 1:
     csv = 'negative.csv'
-    wordlimit = 15000
+    wordlimit = 12000
     visoutput = 'Negative_LDA_Visualization.html'
 elif num == 2:
     csv = 'neutral.csv'
@@ -80,7 +80,7 @@ from spacy_langdetect import LanguageDetector
 
 # Stopwords to remove 'useless' words
 sWords = stopwords.words('english')
-sWords.extend(['got', 'say', 'use', 'from', 'said', 'th', 'gon', 'na', 'wa', 'nt', 'gt', 'to', 'also', 'that', 'this', 'the'])
+sWords.extend(['got', 'say', 'use', 'from', 'said', 'ah', 'oh', 'k', 'la', 'th', 'gon', 'na', 'wa', 'nt', 'gt', 'to', 'also', 'that', 'this', 'the', 'g', 'w', '_', 'r'])
 setStopWords = set(sWords)
 puncExclude = set(string.punctuation)
 engWords = set(nltk.corpus.words.words())
