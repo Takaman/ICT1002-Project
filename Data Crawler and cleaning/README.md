@@ -5,14 +5,19 @@
 The Datascraper.exe file opens up a GUI utilising Tkinter's library for users to enter search parameters for Reddit and Twitter.
 
 Tools used:
-1) Twint https://github.com/twintproject/twint
-2) Pmaw  https://github.com/mattpodolak/pmaw
+1) Twint      https://github.com/twintproject/twint
+2) Pmaw       https://github.com/mattpodolak/pmaw
+3) langdetect https://github.com/Mimino666/langdetect
+4) FTFY       https://github.com/rspeer/python-ftfy
 
-# Features
+## Features
 1) User friendly
 2) Loosely coupled from other modules, can be used independently.
 3) Filters to choose exactly which columns you need
 4) Exported into a CSV file
 
 
+## Step by step process on using it
 
+1) Download the entire folder "Data Crawler and cleaning"
+2) Open up Datascraper.exe
