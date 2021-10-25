@@ -56,6 +56,7 @@ def removeEmoji(text: str) -> str:
                               u"\ufe0f"  # dingbats
                               u"\u3030"
                               "]+", flags=re.UNICODE)
+    
     return emojiPattern.sub(r'', text)
 
 
