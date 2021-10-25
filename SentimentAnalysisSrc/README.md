@@ -2,7 +2,7 @@
 
 ## Description of Sentiment Analysis
 
-This scripts takes in sanitized data as a csv file and analyses every row's text column.
+This scripts takes in sanitized data as a csv file and analyses every row's text column using the VADER sentiment analysis library.
 A score is generated for the text to determine the sentiment. At the sentence level, this is between -1
 to +1, -1 being very negative and +1 being very positive.
 
@@ -21,7 +21,7 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Neccessary library installations 
 
-1) Run command line terminal and Change directory to where your SentimentAnalysisSrc folder is.
+1) Run command line terminal and change directory to where your SentimentAnalysisSrc folder is.
 2) Type in the following code in your terminal to install the libraries: 
 
 	``pip -m install -r requirements.txt``
@@ -60,7 +60,7 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Steps neccessary to run code
 
-1) Run command line terminal and Change directory to where your SentimentAnalysisSrc folder is.
+1) Run command line terminal and change directory to where your SentimentAnalysisSrc folder is.
 2) Type in the following code in your terminal to run the script:
 
 ``py main.py dataFile.csv``
