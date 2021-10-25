@@ -10,7 +10,7 @@ They are:
 
 It evaluates the text row by row, giving them a compound score that represents the sentiment.
 Score ranges from -1 (very negative) to +1 (very positive).
-Once the script finishes execution, it generates 3 output files with the text and their sentiment scores.
+Once the script finishes execution, it generates 3 output csv files with the text and their sentiment scores.
 """
 
 # Done by: Pang Ka Ho and Wang Qi Xian
