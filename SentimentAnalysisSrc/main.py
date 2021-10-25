@@ -132,6 +132,7 @@ def createDataBuffer() -> dict:
         "date": [],
         "link": []
     }
+    
     return dataBuffer
 
 
