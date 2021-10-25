@@ -29,7 +29,9 @@ They are positive.csv, negative.csv and neutral.csv.
 3) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
 
 	- Command Line installation
-		- Run cmd and type into it the following: python -m nltk.downloader all
+		- Run cmd and type into the terminal the following code: 
+
+			``python -m nltk.downloader all``
 
 	- Interactive installer
 		- Run Python interpreter and the following code:
