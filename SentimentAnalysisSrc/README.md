@@ -21,8 +21,8 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Neccessary library installations 
 
-1) Change directory to where your SentimentAnalysisSrc folder is.
-2) Run command line terminal and the following code to install the libraries: 
+1) Run command line terminal and Change directory to where your SentimentAnalysisSrc folder is.
+2) Type in the following code in your terminal to install the libraries: 
 
 	``pip -m install -r requirements.txt``
 
@@ -60,8 +60,8 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Steps neccessary to run code
 
-1) Change directory to where your SentimentAnalysisSrc folder is.
-2) Run the following code in the command line terminal:
+1) Run command line terminal and Change directory to where your SentimentAnalysisSrc folder is.
+2) Type in the following code in your terminal to run the script:
 
 ``py main.py dataFile.csv``
 
