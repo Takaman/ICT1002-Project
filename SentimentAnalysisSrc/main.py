@@ -1,3 +1,20 @@
+"""
+This module does sentimental analysis utilising the VADER sentiment analysis library.
+It supports csv files that must include 3 default column field names in any order.
+
+They are:
+
+    1. "body" (this refers to the text column that contains rows of text to be analysed)
+    2. "date" (this refers to the date of the social media post)
+    3. "link" (this refers to the link to the social media post)
+
+It evaluates the text row by row, giving them a compound score that represents the sentiment.
+Score ranges from -1 (very negative) to +1 (very positive).
+Once the script finishes execution, it generates 3 output files with the text and their sentiment scores.
+"""
+
+# Done by: Pang Ka Ho and Wang Qi Xian
+
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from textblob import TextBlob
 import os.path
