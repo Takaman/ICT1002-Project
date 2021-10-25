@@ -21,7 +21,7 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Neccessary library installations 
 
-1) Run CMD and the following: ``> pip install -r requirements.txt``
+1) Run CMD and the following: ``pip -m install -r requirements.txt``
 2) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
 
 	- Command Line installation
