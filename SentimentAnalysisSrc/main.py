@@ -92,7 +92,7 @@ def appendDataToBuffer(data: dict, buffer: dict) -> None:
     :rtype: NoneType
     """
 
-    buffer["text"].append(removeEmoji(data["text"]))
+    buffer["text"].append(data["text"])
     buffer["score"].append(data["score"])
     buffer["date"].append(data["date"])
     buffer["link"].append(data["link"])
