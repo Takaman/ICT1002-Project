@@ -21,8 +21,9 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Neccessary library installations 
 
-1) Run command line terminal and the following: ``pip -m install -r requirements.txt``
-2) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
+1) Change directory to where your SentimentAnalysisSrc folder is.
+2) Run command line terminal and the following code to install the libraries: ``pip -m install -r requirements.txt``
+3) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
 
 	- Command Line installation
 		- Run cmd and type into it the following: python -m nltk.downloader all
