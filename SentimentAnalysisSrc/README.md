@@ -63,8 +63,7 @@ They are positive.csv, negative.csv and neutral.csv.
 1) Run command line terminal and change directory to where your SentimentAnalysisSrc folder is.
 2) Type in the following code in your terminal to run the script:
 
-``py main.py dataFile.csv``
-
+	``py main.py dataFile.csv``
 
 3) Give the script time to run. It takes an average of 60 - 70 seconds for a sameple data of 70K rows.
 4) 3 newly generated CSV outfile files will appear in the same project folder.
