@@ -146,7 +146,7 @@ def analyseData(df: pd.DataFrame) -> tuple:
     :rtype: tuple
     """
 
-    # Create data buffers to hold the data used to create the respective dataframe object later
+    # Create data buffers to hold the data used to create the respective dataframe objects later
     posDataBuffer = createDataBuffer()
     negDataBuffer = createDataBuffer()
     neuDataBuffer = createDataBuffer()
@@ -180,7 +180,9 @@ def analyseData(df: pd.DataFrame) -> tuple:
         # If the social media posts exceeds the character limit that we set
         if len(originalSentence) > charLimit:
 
-            # Break in up to sentences
+            # Break in up to sentences using TextBlob library
+            # We instantiate the TextBlob object using the text string and use its "sentences" attribute
+            # The "sentences" attribute contains a list of strings, each string being a sentence
             listOfSentences = TextBlob(originalSentence).sentences
 
             # Aggregate sentiment score at the sentence level
