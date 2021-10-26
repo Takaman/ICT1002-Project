@@ -56,7 +56,7 @@ def removeEmoji(text: str) -> str:
                               u"\ufe0f"  # dingbats
                               u"\u3030"
                               "]+", flags=re.UNICODE)
-    
+
     return emojiPattern.sub(r'', text)
 
 
@@ -65,7 +65,7 @@ def loadData(filePath: str) -> pd.DataFrame:
     Loads file using pandas CSV read function. Returns a pandas DataFrame object.
     :param filePath: A string containing the file path to the data file.
     :type filePath: str
-    :return: A panda data frame containing the file data.
+    :return: A pandas data frame containing the file data.
     :rtype: pd.DataFrame
     """
 
@@ -108,6 +108,7 @@ def createDataFrame(buffer: dict) -> pd.DataFrame:
     :rtype: pd.DataFrame
     """
 
+    # Call the pandas library dataframe constructor
     df = pd.DataFrame({
         "rowNo": list(range(buffer["rowNo"])),
         "text": buffer["text"],
@@ -132,7 +133,7 @@ def createDataBuffer() -> dict:
         "date": [],
         "link": []
     }
-    
+
     return dataBuffer
 
 
@@ -145,22 +146,28 @@ def analyseData(df: pd.DataFrame) -> tuple:
     :rtype: tuple
     """
 
+    # Create data buffers to hold the data used to create the respective dataframe object later
     posDataBuffer = createDataBuffer()
     negDataBuffer = createDataBuffer()
     neuDataBuffer = createDataBuffer()
 
+    # Initialize sentiment threshold
     threshold = 0.05
 
+    # Initialize counting for sentiment data
     positiveCount = 0
     negativeCount = 0
     neutralCount = 0
 
     charLimit = 280
 
+    # Instantiate VADER sentiment analysis object
     analyzer = SentimentIntensityAnalyzer()
 
+    # Iterate through the dataframe object using its index and the iloc method
     for row in range(len(df.index)):
 
+        # Try to get the relevant data from the dataframe object
         try:
             originalSentence = df.iloc[row]["body"]
             date = df.iloc[row]["date"]
@@ -179,7 +186,7 @@ def analyseData(df: pd.DataFrame) -> tuple:
             # Aggregate sentiment score at the sentence level
             for sentence in listOfSentences:
                 score += analyzer.polarity_scores(sentence)["compound"]
-                
+
             # Get the average score for the tallied sentiment score
             score = decimal.Decimal(score) / decimal.Decimal(len(listOfSentences))
 
@@ -187,6 +194,7 @@ def analyseData(df: pd.DataFrame) -> tuple:
 
             score = analyzer.polarity_scores(originalSentence)["compound"]
 
+        # Create a dict to package data for easier manipulation
         data = {
             "text": removeEmoji(originalSentence),
             "score": score,
@@ -206,6 +214,7 @@ def analyseData(df: pd.DataFrame) -> tuple:
             neutralCount += 1
             appendDataToBuffer(data, neuDataBuffer)
 
+    # Set data buffer counter for the respective dataframe object used later
     posDataBuffer["rowNo"] = positiveCount
     negDataBuffer["rowNo"] = negativeCount
     neuDataBuffer["rowNo"] = neutralCount
@@ -237,7 +246,7 @@ def createOutputCSVFile(df: pd.DataFrame, fileName: str, index: int = 1) -> None
         # If file does not exist in project folder
         if not os.path.isfile(f"{fileName}.csv"):
 
-            # Attempt to create a new file
+            # Create a new file
             df.to_csv(f"{fileName}.csv", index=False)
 
         # Else file exist with the same name, attempt to create another file instead
@@ -250,9 +259,10 @@ def createOutputCSVFile(df: pd.DataFrame, fileName: str, index: int = 1) -> None
 
         newFileName = f"{fileName} ({index})"
 
+        # If file does not exist in project folder
         if not os.path.isfile(f"{newFileName}.csv"):
 
-            # Attempt to create a new file
+            # Create a new file
             df.to_csv(f"{newFileName}.csv", index=False)
 
         else:
@@ -265,7 +275,7 @@ def main():
     """
     Loads data, analyses data, and generates 3 csv files for positive, negative and neutral sentiment in folder.
     """
-    
+
     # Set decimal precision
     decimal.getcontext().prec = 4
 
@@ -273,7 +283,7 @@ def main():
 
     # Sample hardcoded test data
     # filePath = "redditandtweetsv3.csv"
-    
+
     # Validate user argument length
     if len(sys.argv) != 2:
         print("Usage: py main.py dataFile.csv")
@@ -284,6 +294,7 @@ def main():
 
     posDF, negDF, neuDF = analyseData(df)
 
+    # Create output files in the relative path to the application folder
     createOutputCSVFile(posDF, "positive")
     createOutputCSVFile(negDF, "negative")
     createOutputCSVFile(neuDF, "neutral")
