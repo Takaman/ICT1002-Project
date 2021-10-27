@@ -129,7 +129,7 @@ def twitterPage():
     Label(window, text="Enter your twitter search keyword").grid(row=1,column=0,sticky=W)
     Label(window, text="Do you want to exclude links contained in tweets?").grid(row=3,column=0,sticky=W)
     Label(window, text="Enter the limit of your tweets(numbers)").grid(row=5,column=0,sticky=W)
-    Label(window, text="Choose all columns you want to be included: (Default= Date,Tweet, Link").grid(row=7,column=0,sticky=W)
+    Label(window, text="Choose all columns you want to be included: (Default= Date,Tweet, Link)").grid(row=7,column=0,sticky=W)
     Label(window, text="From which date?" ).grid(row=9,column=0,sticky=W)
     Label(window,text="To which date?").grid(row=11,column=0,sticky=W)
     Label(window,text="Enter your CSV filename").grid(row=13,column=0,sticky=W)
