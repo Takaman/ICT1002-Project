@@ -8,7 +8,7 @@ Columns are:
 Row Number, Text, Score, Date, Link
 '''
 
-# Chapter 0: Take in User Arguments
+# Chapter 0: Take in User Arguments & Input Validation
 # File will take in 1 integer argument: 1, 2 or 3
 # 1 signifies that the code will present the data based on negative.csv.
 # 2 signifies that the code will present the data based on neutral.csv.
@@ -85,7 +85,7 @@ setStopWords = set(sWords)
 puncExclude = set(string.punctuation)
 engWords = set(nltk.corpus.words.words())
 
-#
+# Lemmatization for Normalization of Corpus
 lemma = WordNetLemmatizer()
 
 # Load Spacy Languge Support
@@ -97,7 +97,7 @@ def get_lang_detector(nlp, name):
 Language.factory("language_detector", func=get_lang_detector)
 nlp.add_pipe("language_detector", last=True)
 
-# Initialise Data Cleaning
+# Initialise Data Cleaning:
 
 # Stage 1: Remove URLs, Newlines, Numbers, Usernames, Punctuations
 # Remove URLs
@@ -133,7 +133,7 @@ def clean(doc):
     # Remove Stopwords
     removesw = " ".join([x for x in normaldata.split() if not x.lower() in setStopWords])
     
-    # Final Removal of Non-English Sentences
+    # Removal of Non-English Sentences
     data1 = nlp(removesw)
     finalData = ""
     for sent in data1.sents:
@@ -197,6 +197,7 @@ topics = model.show_topics(formatted=False)
 # Plot wordclouds in a 2 x 5 format
 fig, axes = plt.subplots(2, 5, figsize=(5,5), sharex=True, sharey=True)
 
+# This sets the display for the wordclouds. You probably would not want to mess with this.
 for i, ax in enumerate(axes.flatten()):
     fig.add_subplot(ax)
     topicWords = dict(topics[i][1])
@@ -211,7 +212,7 @@ plt.margins(x=0, y=0)
 plt.tight_layout()
 plt.show()
 
-# Chapter 5: Visualizing Topics via word counts of keywords
+# Chapter 5: Visualizing Topics via word counts of keywords and weightages
 from collections import Counter
 topics = model.show_topics(formatted=False)
 data_flat = [w for w_list in cleanData for w in w_list]
@@ -222,11 +223,16 @@ for i, topic in topics:
     for word, weight in topic:
         out.append([word, i , weight, counter[word]])
 
+# The main backbone for the data in the charts.
 df = pd.DataFrame(out, columns=['word', 'topic_id', 'importance', 'word_count'])        
 
 # Plot Wordcount and Weights of Topic Keywords in 2 x 5 format
 fig, axes = plt.subplots(2, 5, figsize=(10,9), sharey=True)
+
+# Colorise headings and text of each graph
 cols = [color for name, color in mcolors.TABLEAU_COLORS.items()]
+
+# This sets the display for the charts. You probably would not want to mess with this.
 for i, ax in enumerate(axes.flatten()):
     ax.bar(x='word', height="word_count", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.5, alpha=0.3, label='Word Count')
     ax_twin = ax.twinx()
@@ -240,7 +246,7 @@ for i, ax in enumerate(axes.flatten()):
 
 fig.tight_layout(w_pad=2)    
 fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)
-plt.subplots_adjust(left = 0.045, right = 0.971, wspace = 0.129, hspace = 0.267)
+plt.subplots_adjust(left = 0.045, right = 0.971, wspace = 0.129, hspace = 0.267) # These settings are set to make sure everything is readable and not too clumped together. 
 plt.show()
 
 # Chapter 6: Topic Visualization
@@ -249,10 +255,13 @@ In order to properly present our data using our model,
 pyLDAvis provides a good and interactive way of seeing each topic
 keywords and maps each topic with different graphs.
 '''
+
 import pyLDAvis.gensim_models
 import pyLDAvis
 
 # Visualize the topics
 visualisation = pyLDAvis.gensim_models.prepare(model, docTermMatrix, corpdict)
+
+# Export output to HTML
 pyLDAvis.save_html(visualisation, visoutput)
 

@@ -1,3 +1,20 @@
+"""
+This module does sentimental analysis utilising the VADER sentiment analysis library.
+It supports csv files that must include 3 default column field names in any order.
+
+They are:
+
+    1. "body" (this refers to the text column that contains rows of text to be analysed)
+    2. "date" (this refers to the date of the social media post)
+    3. "link" (this refers to the link to the social media post)
+
+It evaluates the text row by row, giving them a compound score that represents the sentiment.
+Score ranges from -1 (very negative) to +1 (very positive).
+Once the script finishes execution, it generates 3 output csv files with the text and their sentiment scores.
+"""
+
+# Done by: Pang Ka Ho and Wang Qi Xian
+
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from textblob import TextBlob
 import os.path
@@ -39,6 +56,7 @@ def removeEmoji(text: str) -> str:
                               u"\ufe0f"  # dingbats
                               u"\u3030"
                               "]+", flags=re.UNICODE)
+
     return emojiPattern.sub(r'', text)
 
 
@@ -47,7 +65,7 @@ def loadData(filePath: str) -> pd.DataFrame:
     Loads file using pandas CSV read function. Returns a pandas DataFrame object.
     :param filePath: A string containing the file path to the data file.
     :type filePath: str
-    :return: A panda data frame containing the file data.
+    :return: A pandas data frame containing the file data.
     :rtype: pd.DataFrame
     """
 
@@ -75,7 +93,7 @@ def appendDataToBuffer(data: dict, buffer: dict) -> None:
     :rtype: NoneType
     """
 
-    buffer["text"].append(removeEmoji(data["text"]))
+    buffer["text"].append(data["text"])
     buffer["score"].append(data["score"])
     buffer["date"].append(data["date"])
     buffer["link"].append(data["link"])
@@ -90,6 +108,7 @@ def createDataFrame(buffer: dict) -> pd.DataFrame:
     :rtype: pd.DataFrame
     """
 
+    # Call the pandas library dataframe constructor
     df = pd.DataFrame({
         "rowNo": list(range(buffer["rowNo"])),
         "text": buffer["text"],
@@ -114,6 +133,7 @@ def createDataBuffer() -> dict:
         "date": [],
         "link": []
     }
+
     return dataBuffer
 
 
@@ -126,22 +146,28 @@ def analyseData(df: pd.DataFrame) -> tuple:
     :rtype: tuple
     """
 
+    # Create data buffers to hold the data used to create the respective dataframe objects later
     posDataBuffer = createDataBuffer()
     negDataBuffer = createDataBuffer()
     neuDataBuffer = createDataBuffer()
 
+    # Initialize sentiment threshold
     threshold = 0.05
 
+    # Initialize counting for sentiment data
     positiveCount = 0
     negativeCount = 0
     neutralCount = 0
 
     charLimit = 280
 
+    # Instantiate VADER sentiment analysis object
     analyzer = SentimentIntensityAnalyzer()
 
+    # Iterate through the dataframe object using its index and the iloc method
     for row in range(len(df.index)):
 
+        # Try to get the relevant data from the dataframe object
         try:
             originalSentence = df.iloc[row]["body"]
             date = df.iloc[row]["date"]
@@ -154,13 +180,15 @@ def analyseData(df: pd.DataFrame) -> tuple:
         # If the social media posts exceeds the character limit that we set
         if len(originalSentence) > charLimit:
 
-            # Break in up to sentences
+            # Break in up to sentences using TextBlob library
+            # We instantiate the TextBlob object using the text string and use its "sentences" attribute
+            # The "sentences" attribute contains a list of strings, each string being a sentence
             listOfSentences = TextBlob(originalSentence).sentences
 
             # Aggregate sentiment score at the sentence level
             for sentence in listOfSentences:
                 score += analyzer.polarity_scores(sentence)["compound"]
-                
+
             # Get the average score for the tallied sentiment score
             score = decimal.Decimal(score) / decimal.Decimal(len(listOfSentences))
 
@@ -168,6 +196,7 @@ def analyseData(df: pd.DataFrame) -> tuple:
 
             score = analyzer.polarity_scores(originalSentence)["compound"]
 
+        # Create a dict to package data for easier manipulation
         data = {
             "text": removeEmoji(originalSentence),
             "score": score,
@@ -187,6 +216,7 @@ def analyseData(df: pd.DataFrame) -> tuple:
             neutralCount += 1
             appendDataToBuffer(data, neuDataBuffer)
 
+    # Set data buffer counter for the respective dataframe object used later
     posDataBuffer["rowNo"] = positiveCount
     negDataBuffer["rowNo"] = negativeCount
     neuDataBuffer["rowNo"] = neutralCount
@@ -218,7 +248,7 @@ def createOutputCSVFile(df: pd.DataFrame, fileName: str, index: int = 1) -> None
         # If file does not exist in project folder
         if not os.path.isfile(f"{fileName}.csv"):
 
-            # Attempt to create a new file
+            # Create a new file
             df.to_csv(f"{fileName}.csv", index=False)
 
         # Else file exist with the same name, attempt to create another file instead
@@ -231,9 +261,10 @@ def createOutputCSVFile(df: pd.DataFrame, fileName: str, index: int = 1) -> None
 
         newFileName = f"{fileName} ({index})"
 
+        # If file does not exist in project folder
         if not os.path.isfile(f"{newFileName}.csv"):
 
-            # Attempt to create a new file
+            # Create a new file
             df.to_csv(f"{newFileName}.csv", index=False)
 
         else:
@@ -246,7 +277,7 @@ def main():
     """
     Loads data, analyses data, and generates 3 csv files for positive, negative and neutral sentiment in folder.
     """
-    
+
     # Set decimal precision
     decimal.getcontext().prec = 4
 
@@ -254,7 +285,7 @@ def main():
 
     # Sample hardcoded test data
     # filePath = "redditandtweetsv3.csv"
-    
+
     # Validate user argument length
     if len(sys.argv) != 2:
         print("Usage: py main.py dataFile.csv")
@@ -265,6 +296,7 @@ def main():
 
     posDF, negDF, neuDF = analyseData(df)
 
+    # Create output files in the relative path to the application folder
     createOutputCSVFile(posDF, "positive")
     createOutputCSVFile(negDF, "negative")
     createOutputCSVFile(neuDF, "neutral")

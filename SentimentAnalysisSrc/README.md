@@ -2,7 +2,7 @@
 
 ## Description of Sentiment Analysis
 
-This scripts takes in sanitized data as a csv file and analyses every row's text column.
+This scripts takes in sanitized data as a csv file and analyses every row's text column using the VADER sentiment analysis library.
 A score is generated for the text to determine the sentiment. At the sentence level, this is between -1
 to +1, -1 being very negative and +1 being very positive.
 
@@ -21,11 +21,17 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Neccessary library installations 
 
-1) Run CMD and the following: ``> pip install -r requirements.txt``
-2) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
+1) Run command line terminal and change directory to where your SentimentAnalysisSrc folder is.
+2) Type in the following code in your terminal to install the libraries: 
+
+	``pip -m install -r requirements.txt``
+
+3) Download the NLTK data. We recommend these 2 ways of installing the NLTK data.
 
 	- Command Line installation
-		- Run cmd and type into it the following: python -m nltk.downloader all
+		- Run cmd and type into the terminal the following code: 
+
+			``python -m nltk.downloader all``
 
 	- Interactive installer
 		- Run Python interpreter and the following code:
@@ -56,11 +62,10 @@ They are positive.csv, negative.csv and neutral.csv.
 
 ### Steps neccessary to run code
 
-1) Change directory to where your SentimentAnalysisSrc folder is.
-2) Run the following code in the terminal:
+1) Run command line terminal and change directory to where your SentimentAnalysisSrc folder is.
+2) Type in the following code in your terminal to run the script:
 
-``py main.py dataFile.csv``
-
+	``py main.py dataFile.csv``
 
 3) Give the script time to run. It takes an average of 60 - 70 seconds for a sameple data of 70K rows.
 4) 3 newly generated CSV outfile files will appear in the same project folder.
