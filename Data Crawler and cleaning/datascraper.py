@@ -81,7 +81,9 @@ def redditScraper(topic, subreddit, limit, after, before, csvredditfilename, cus
 def twintScraper(topic, links ,since, until, limit, custom, output):
     """Takes in parameters and then set accordingly 
     to the twint configurations and run it"""
+
     custom.extend(["date","tweet","link"])
+
     c = twint.Config()
     c.Search = topic
     c.Since = since
