@@ -27,6 +27,11 @@ Tools used:
 4) If there are missing or error fields, a popup will appear to indicate that it has issues.
 5) After clicking on the submit button, the screen will be unresponsive for a while and the submit button will remain pressed. When scraping of data is successful, there will be a popup message.
 <img src= "https://user-images.githubusercontent.com/91510432/138583295-57029e12-5226-417a-9098-091162adfe36.png" width="200" height="150">
+
 6) A CSV file named by you will then appear in the same folder. 
+7) After downloading both Twitter and Reddit files. You would have to combine them through the script instead of manually combining them
+8) combinecleanData also checks for english comments, and drops the particular row if it is not detected as English.
+9) In the terminal project folder, enter `python ./combinecleanData.py twitter.csv reddit.csv`, to combine both of them. The output would then be redditandtweets.csv
+<img src= "https://user-images.githubusercontent.com/91510432/139183366-4cbfb8ba-938d-4fb8-ad5f-c63b14d8f8a2.png" width= "500">
 
 
