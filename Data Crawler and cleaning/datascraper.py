@@ -96,6 +96,9 @@ def twintScraper(topic, links ,since, until, limit, custom, output):
     c.Custom["tweet"] = custom
     c.Output = output
     twint.run.Search(c)
+    twitterCsv = pd.read_csv(output)
+    twitterCsv.rename(columns={"tweet":"body","username":"author"},inplace=True)
+    twitterCsv.to_csv(output)
     popoutImg()
 
 #Tkinter GUI page for twitter menu

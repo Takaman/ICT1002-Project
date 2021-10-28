@@ -11,7 +11,6 @@ if __name__ == "__main__":
 
 #Concatenation of both reddit and twitter files(with same column names and file names provided in CSV)
 twitterCsv = pd.read_csv(stringinput1)
-twitterCsv.rename(columns={"tweet":"body","username":"author"},inplace=True)
 redditCsv = pd.read_csv(stringinput2)
 df = pd.concat([redditCsv,twitterCsv])
 
